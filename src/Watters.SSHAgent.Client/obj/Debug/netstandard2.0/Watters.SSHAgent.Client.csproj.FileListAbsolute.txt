@@ -1,0 +1,9 @@
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/bin/Debug/netstandard2.0/Watters.SSHAgent.Client.deps.json
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/bin/Debug/netstandard2.0/Watters.SSHAgent.Client.dll
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/bin/Debug/netstandard2.0/Watters.SSHAgent.Client.pdb
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/obj/Debug/netstandard2.0/Watters.SSHAgent.Client.csprojAssemblyReference.cache
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/obj/Debug/netstandard2.0/Watters.SSHAgent.Client.csproj.CoreCompileInputs.cache
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/obj/Debug/netstandard2.0/Watters.SSHAgent.Client.AssemblyInfoInputs.cache
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/obj/Debug/netstandard2.0/Watters.SSHAgent.Client.AssemblyInfo.cs
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/obj/Debug/netstandard2.0/Watters.SSHAgent.Client.dll
+/Volumes/Notes/code/untitled/Watters.SSHAgent/src/Watters.SSHAgent.Client/obj/Debug/netstandard2.0/Watters.SSHAgent.Client.pdb

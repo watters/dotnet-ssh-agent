@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watters.SSHAgent.Client", "src\Watters.SSHAgent.Client\Watters.SSHAgent.Client.csproj", "{181EA867-5C5E-4B7D-A3DE-B1508E73B662}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4760D403-40DC-4AC0-8AB3-82ABD728CCF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watters.SSHAgent.Client.Tests", "tests\Watters.SSHAgent.Client.Tests\Watters.SSHAgent.Client.Tests.csproj", "{403D8085-9362-4A8F-BA34-7547FEE58900}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{181EA867-5C5E-4B7D-A3DE-B1508E73B662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{181EA867-5C5E-4B7D-A3DE-B1508E73B662}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{181EA867-5C5E-4B7D-A3DE-B1508E73B662}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{181EA867-5C5E-4B7D-A3DE-B1508E73B662}.Release|Any CPU.Build.0 = Release|Any CPU
+		{403D8085-9362-4A8F-BA34-7547FEE58900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{403D8085-9362-4A8F-BA34-7547FEE58900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{403D8085-9362-4A8F-BA34-7547FEE58900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{403D8085-9362-4A8F-BA34-7547FEE58900}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{403D8085-9362-4A8F-BA34-7547FEE58900} = {4760D403-40DC-4AC0-8AB3-82ABD728CCF9}
+	EndGlobalSection
+EndGlobal
