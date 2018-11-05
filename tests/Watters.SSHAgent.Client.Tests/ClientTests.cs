@@ -37,7 +37,7 @@ namespace Watters.SSHAgent.Client.Tests
                 string homeDir = Environment.GetEnvironmentVariable("HOME");
                 string rsaKeyFilePath = $"{homeDir}/.ssh/id_rsa";
 
-                var rsaAgentKey = client.List().SingleOrDefault(i => i.CommentUTF8 == rsaKeyFilePath);
+                var rsaAgentKey = identities.SingleOrDefault(i => i.CommentUTF8 == rsaKeyFilePath);
 
                 AsymmetricCipherKeyPair key;
                 using (StreamReader keyFileReader = File.OpenText(rsaKeyFilePath))

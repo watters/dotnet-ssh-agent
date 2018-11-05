@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -16,7 +15,7 @@ namespace Watters.SSHAgent.Client
      * https://tools.ietf.org/html/rfc4253
      */
 
-    public class SSHAgentClient : IDisposable
+    public partial class SSHAgentClient : IDisposable
     {
         public SSHAgentClient()
         {
@@ -83,10 +82,10 @@ namespace Watters.SSHAgent.Client
                 _socket.Receive(commentBytes);
 
                 identities.Add(new Identity
-                {
-                    KeyBlob = blobBytes,
-                    Comment = commentBytes
-                });
+                (
+                    keyBlob: blobBytes,
+                    comment: commentBytes
+                ));
             }
 
             return identities.AsReadOnly();
@@ -192,10 +191,10 @@ namespace Watters.SSHAgent.Client
                     responseStream.Read(signatureBytes, 0, signatureBytes.Length);
                     
                     return new SignResponse
-                    {
-                        Kind = format,
-                        Signature = signatureBytes
-                    };
+                    (
+                        format: format,
+                        signature: signatureBytes
+                    );
                 }
             }
         }
@@ -265,44 +264,5 @@ namespace Watters.SSHAgent.Client
         private const byte SSH_AGENT_IDENTITIES_ANSWER = 12;
         private const byte SSH_AGENTC_SIGN_REQUEST = 13;
         private const byte SSH_AGENT_SIGN_RESPONSE = 14;
-
-        public class SignResponse
-        {
-            public string Kind { get; set; }
-            public byte[] Signature { get; set; }
-        }
-        
-        public class Identity
-        {
-            public byte[] KeyBlob { get; set; }
-            public byte[] Comment { get; set; }
-            public string CommentUTF8 => Encoding.UTF8.GetString(Comment);
-            public string BlobMD5
-            {
-                get
-                {
-                    using (var md5 = System.Security.Cryptography.MD5.Create())
-                    {
-                        return GetColonDelimitedHex(md5.ComputeHash(KeyBlob));
-                    }
-                }
-            }
-
-            public string BlobSHA256
-            {
-                get
-                {
-                    using (var sha256 = System.Security.Cryptography.SHA256.Create())
-                    {
-                        return GetColonDelimitedHex(sha256.ComputeHash(KeyBlob));
-                    }
-                }
-            }
-
-            private string GetColonDelimitedHex(byte[] bytes)
-            {
-                return string.Join(":",bytes.Select(b => b.ToString("x2")));
-            }
-        }
     }    
 }
