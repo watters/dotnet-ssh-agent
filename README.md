@@ -1,1 +1,1 @@
-# A .NET SSHAgent Client/Proxy
+# SSHAgent Client/Proxy for .NET Core
