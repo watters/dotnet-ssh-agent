@@ -20,8 +20,14 @@ namespace Watters.SSHAgent.Client.Tests
                 client.Connect(new UnixDomainSocketEndPoint(Environment.GetEnvironmentVariable("SSH_AUTH_SOCK")));
                 var identities = client.List();
 
-                string mantaKeyId = Environment.GetEnvironmentVariable("MANTA_KEY_ID");
-                var mantaKey = identities.Single(i => i.BlobMD5 == mantaKeyId);
+                string md5Fingerprint = Environment.GetEnvironmentVariable("MD5_FINGERPRINT");
+                var md5Result = identities.SingleOrDefault(i => $"MD5:{i.BlobMD5}" == md5Fingerprint);
+
+                string sha256Fingerprint = Environment.GetEnvironmentVariable("SHA256_FINGERPRINT");
+                var sha256Result = identities.SingleOrDefault(i => $"SHA256:{i.BlobSHA256}" == sha256Fingerprint);
+
+                Assert.NotNull(md5Result);
+                Assert.NotNull(sha256Result);
             }
         }
 

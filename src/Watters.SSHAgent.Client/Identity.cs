@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Watters.SSHAgent.Client
@@ -22,7 +24,7 @@ namespace Watters.SSHAgent.Client
                 {
                     using (var md5 = System.Security.Cryptography.MD5.Create())
                     {
-                        return GetColonDelimitedHex(md5.ComputeHash(KeyBlob));
+                        return string.Join(":",md5.ComputeHash(KeyBlob).Select(b => b.ToString("x2")));
                     }
                 }
             }
@@ -33,14 +35,9 @@ namespace Watters.SSHAgent.Client
                 {
                     using (var sha256 = System.Security.Cryptography.SHA256.Create())
                     {
-                        return GetColonDelimitedHex(sha256.ComputeHash(KeyBlob));
+                        return Convert.ToBase64String(sha256.ComputeHash(KeyBlob)).Replace("=","");
                     }
                 }
-            }
-
-            private string GetColonDelimitedHex(byte[] bytes)
-            {
-                return string.Join(":",bytes.Select(b => b.ToString("x2")));
             }
         }
     }
