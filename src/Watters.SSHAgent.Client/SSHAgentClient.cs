@@ -175,7 +175,6 @@ namespace Watters.SSHAgent.Client
                 {
                     var signatureStructLengthBytes = new byte[4];
                     responseStream.Read(signatureStructLengthBytes, 0, signatureStructLengthBytes.Length);
-                    uint signatureStructLength = ToNetworkByteOrderUInt32(signatureStructLengthBytes,0);
 
                     var formatLengthBytes = new byte[4];
                     responseStream.Read(formatLengthBytes, 0, formatLengthBytes.Length);
@@ -262,7 +261,6 @@ namespace Watters.SSHAgent.Client
         private Socket _socket;
 
         private const byte SSH_AGENT_FAILURE = 5;
-        private const byte SSH_AGENT_SUCCESS = 6;
         private const byte SSH_AGENTC_REQUEST_IDENTITIES = 11;
         private const byte SSH_AGENT_IDENTITIES_ANSWER = 12;
         private const byte SSH_AGENTC_SIGN_REQUEST = 13;
