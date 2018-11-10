@@ -57,9 +57,20 @@ namespace Watters.SSHAgent.Client
         {
             SendRequestAndValidateResponse(new byte[] {SSH_AGENTC_REQUEST_IDENTITIES}, SSH_AGENT_IDENTITIES_ANSWER);
 
+            // get the count of keys from the response
             var countOfIdentitiesBytes = new byte[4];
             _socket.Receive(countOfIdentitiesBytes);
             var countOfIdentities = ToUint32FromNetworkByteOrder(countOfIdentitiesBytes);
+
+            /*
+             * iterate over the identities in the response
+             *
+             * identity structure is two strings -- a key blob and a comment
+             *
+             * the SSH protocol wire format for a string is described
+             * in https://tools.ietf.org/html/rfc4251#section-5
+             *
+             */
 
             var identities = new List<Identity>();
             for (var i = 0; i < countOfIdentities; i++)
@@ -85,46 +96,46 @@ namespace Watters.SSHAgent.Client
         }
 
         /*
-        * https://tools.ietf.org/html/draft-miller-ssh-agent-00#section-4.5
-        *
-        * 4.5.  Private key operations
-        *
-        *    A client may request the agent perform a private key signature
-        *    operation using the following message:
-        *
-        *        byte                    SSH_AGENTC_SIGN_REQUEST
-        *        string                  key blob
-        *        string                  data
-        *        uint32                  flags
-        *
-        *    Where "key blob" is the key requested to perform the signature,
-        *    "data" is the data to be signed and "flags" is a bitfield containing
-        *    the bitwise OR of zero or more signature flags (see below).
-        *
-        *    If the agent is unable or unwilling to generate the signature (e.g.
-        *    because it doesn't have the specified key, or the user refused
-        *    confirmation of a constrained key), it must reply with a
-        *    SSH_AGENT_FAILURE message.
-        *
-        *    On success, the agent shall reply with:
-        *
-        *        byte                    SSH_AGENT_SIGN_RESPONSE
-        *        string                  signature
-        *
-        *    The signature format is specific to the algorithm of the key type in
-        *    use.  SSH protocol signature formats are defined in [RFC4253] for
-        *    "ssh-rsa" and "ssh-dss" keys, in [RFC5656] for "ecdsa-sha2-*" keys
-        *    and in [I-D.ietf-curdle-ssh-ed25519] for "ssh-ed25519" keys.
-        *
-        * 4.5.1.  Signature flags
-        *
-        *    Two flags are currently defined for signature request messages:
-        *    SSH_AGENT_RSA_SHA2_256 and SSH_AGENT_RSA_SHA2_512.  These two flags
-        *    are only valid for "ssh-rsa" keys and request that the agent return a
-        *    signature using the "rsa-sha2-256" or "rsa-sha2-515" signature
-        *    methods respectively.  These signature schemes are defined in
-        *    [I-D.ietf-curdle-rsa-sha2].
-        */
+         * https://tools.ietf.org/html/draft-miller-ssh-agent-00#section-4.5
+         *
+         * 4.5.  Private key operations
+         *
+         *    A client may request the agent perform a private key signature
+         *    operation using the following message:
+         *
+         *        byte                    SSH_AGENTC_SIGN_REQUEST
+         *        string                  key blob
+         *        string                  data
+         *        uint32                  flags
+         *
+         *    Where "key blob" is the key requested to perform the signature,
+         *    "data" is the data to be signed and "flags" is a bitfield containing
+         *    the bitwise OR of zero or more signature flags (see below).
+         *
+         *    If the agent is unable or unwilling to generate the signature (e.g.
+         *    because it doesn't have the specified key, or the user refused
+         *    confirmation of a constrained key), it must reply with a
+         *    SSH_AGENT_FAILURE message.
+         *
+         *    On success, the agent shall reply with:
+         *
+         *        byte                    SSH_AGENT_SIGN_RESPONSE
+         *        string                  signature
+         *
+         *    The signature format is specific to the algorithm of the key type in
+         *    use.  SSH protocol signature formats are defined in [RFC4253] for
+         *    "ssh-rsa" and "ssh-dss" keys, in [RFC5656] for "ecdsa-sha2-*" keys
+         *    and in [I-D.ietf-curdle-ssh-ed25519] for "ssh-ed25519" keys.
+         *
+         * 4.5.1.  Signature flags
+         *
+         *    Two flags are currently defined for signature request messages:
+         *    SSH_AGENT_RSA_SHA2_256 and SSH_AGENT_RSA_SHA2_512.  These two flags
+         *    are only valid for "ssh-rsa" keys and request that the agent return a
+         *    signature using the "rsa-sha2-256" or "rsa-sha2-515" signature
+         *    methods respectively.  These signature schemes are defined in
+         *    [I-D.ietf-curdle-rsa-sha2].
+         */
 
         public SignResponse Sign(Identity identity, byte[] data)
         {
@@ -216,7 +227,7 @@ namespace Watters.SSHAgent.Client
 
         /// <summary>
         /// Returns a byte[] representation of an unsigned 32-bit integer
-        /// in network byte order
+        /// in network byte order (https://tools.ietf.org/html/rfc4251#section-5)
         /// </summary>
         private byte[] ToNetworkByteOrderBytes(uint num)
         {
@@ -228,7 +239,8 @@ namespace Watters.SSHAgent.Client
         }
 
         /// <summary>
-        /// Returns a uint32 from a byte[] in network byte order (big endian);
+        /// Returns a uint32 from a byte[] in network byte order
+        /// (https://tools.ietf.org/html/rfc4251#section-5)
         /// </summary>
         private uint ToUint32FromNetworkByteOrder(byte[] bytes)
         {
