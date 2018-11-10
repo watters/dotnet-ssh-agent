@@ -49,27 +49,31 @@ namespace Watters.SSHAgent.Client
          *
          */
 
+        /// <summary>
+        /// Retrieves a list of identities from ssh-agent
+        /// </summary>
+        /// <returns></returns>
         public ReadOnlyCollection<Identity> List()
         {
             SendRequestAndValidateResponse(new byte[] {SSH_AGENTC_REQUEST_IDENTITIES}, SSH_AGENT_IDENTITIES_ANSWER);
 
             var countOfIdentitiesBytes = new byte[4];
             _socket.Receive(countOfIdentitiesBytes);
-            var countOfIdentities = ToNetworkByteOrderUInt32(countOfIdentitiesBytes, 0);
+            var countOfIdentities = ToUint32FromNetworkByteOrder(countOfIdentitiesBytes);
 
             var identities = new List<Identity>();
             for (var i = 0; i < countOfIdentities; i++)
             {
                 var blobLengthBytes = new byte[4];
                 _socket.Receive(blobLengthBytes);
-                var blobLength = ToNetworkByteOrderUInt32(blobLengthBytes, 0);
+                var blobLength = ToUint32FromNetworkByteOrder(blobLengthBytes);
 
                 var blobBytes = new byte[blobLength];
                 _socket.Receive(blobBytes);
 
                 var commentLengthBytes = new byte[4];
                 _socket.Receive(commentLengthBytes);
-                var commentLength = ToNetworkByteOrderUInt32(commentLengthBytes, 0);
+                var commentLength = ToUint32FromNetworkByteOrder(commentLengthBytes);
 
                 var commentBytes = new byte[commentLength];
                 _socket.Receive(commentBytes);
@@ -154,7 +158,7 @@ namespace Watters.SSHAgent.Client
 
                 var formatLengthBytes = new byte[4];
                 responseStream.Read(formatLengthBytes, 0, formatLengthBytes.Length);
-                uint formatLength = ToNetworkByteOrderUInt32(formatLengthBytes, 0);
+                uint formatLength = ToUint32FromNetworkByteOrder(formatLengthBytes);
 
                 var formatBytes = new byte[formatLength];
                 responseStream.Read(formatBytes, 0, formatBytes.Length);
@@ -162,7 +166,7 @@ namespace Watters.SSHAgent.Client
 
                 var signatureLengthBytes = new byte[4];
                 responseStream.Read(signatureLengthBytes, 0, signatureLengthBytes.Length);
-                uint signatureLength = ToNetworkByteOrderUInt32(signatureLengthBytes, 0);
+                uint signatureLength = ToUint32FromNetworkByteOrder(signatureLengthBytes);
 
                 var signatureBytes = new byte[signatureLength];
                 responseStream.Read(signatureBytes, 0, signatureBytes.Length);
@@ -188,7 +192,7 @@ namespace Watters.SSHAgent.Client
 
             byte[] responseSizeBuffer = new byte[4];
             _socket.Receive(responseSizeBuffer);
-            uint responseSize = ToNetworkByteOrderUInt32(responseSizeBuffer, 0);
+            uint responseSize = ToUint32FromNetworkByteOrder(responseSizeBuffer);
 
             if (responseSize == 0)
                 throw new InvalidOperationException("Response is empty.");
@@ -210,23 +214,32 @@ namespace Watters.SSHAgent.Client
             return responseSize - (uint) responseCode.Length;
         }
 
-        private byte[] ToNetworkByteOrderBytes(uint length)
+        /// <summary>
+        /// Returns a byte[] representation of an unsigned 32-bit integer
+        /// in network byte order
+        /// </summary>
+        private byte[] ToNetworkByteOrderBytes(uint num)
         {
-            byte[] bytes = BitConverter.GetBytes(length);
+            byte[] bytes = BitConverter.GetBytes(num);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
 
             return bytes;
         }
 
-        private uint ToNetworkByteOrderUInt32(byte[] bytes, int startIndex)
+        /// <summary>
+        /// Returns a uint32 from a byte[] in network byte order (big endian);
+        /// </summary>
+        private uint ToUint32FromNetworkByteOrder(byte[] bytes)
         {
+            if (bytes.Length != 4)
+                throw new ArgumentOutOfRangeException(nameof(bytes), "array must be 4 bytes long");
+
             byte[] myBytes = new byte[bytes.Length];
-            Buffer.BlockCopy(bytes, startIndex, myBytes, 0, bytes.Length - startIndex);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(myBytes);
 
-            return BitConverter.ToUInt32(myBytes, startIndex);
+            return BitConverter.ToUInt32(myBytes, 0);
         }
 
         private readonly Socket _socket;
