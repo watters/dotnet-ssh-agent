@@ -137,7 +137,7 @@ namespace Watters.SSHAgent.Client
          *    [I-D.ietf-curdle-rsa-sha2].
          */
 
-        public SignResponse Sign(Identity identity, byte[] data)
+        public SignatureResponse Sign(Identity identity, byte[] data)
         {
             byte[] requestBytes;
             using (var request = new MemoryStream())
@@ -182,7 +182,7 @@ namespace Watters.SSHAgent.Client
                 var signatureBytes = new byte[signatureLength];
                 responseStream.Read(signatureBytes, 0, signatureBytes.Length);
 
-                return new SignResponse(format, signatureBytes);
+                return new SignatureResponse(format, signatureBytes);
             }
         }
 

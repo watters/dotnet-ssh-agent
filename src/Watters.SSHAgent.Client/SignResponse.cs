@@ -2,9 +2,9 @@
 {
     public partial class SSHAgentClient
     {
-        public class SignResponse
+        public class SignatureResponse
         {
-            public SignResponse(string format, byte[] signature)
+            public SignatureResponse(string format, byte[] signature)
             {
                 Format = format;
                 Signature = signature;
