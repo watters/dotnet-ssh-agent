@@ -15,7 +15,7 @@ namespace Watters.SSHAgent.Client
      * https://tools.ietf.org/html/rfc4253
      */
 
-    public partial class SSHAgentClient : IDisposable
+    public class SSHAgentClient : IDisposable
     {
         public SSHAgentClient(EndPoint endpoint)
         {
