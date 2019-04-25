@@ -247,11 +247,10 @@ namespace Watters.SSHAgent.Client
             if (bytes.Length != 4)
                 throw new ArgumentOutOfRangeException(nameof(bytes), "array must be 4 bytes long");
 
-            byte[] myBytes = new byte[bytes.Length];
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(myBytes);
+                Array.Reverse(bytes);
 
-            return BitConverter.ToUInt32(myBytes, 0);
+            return BitConverter.ToUInt32(bytes, 0);
         }
 
         private readonly Socket _socket;
